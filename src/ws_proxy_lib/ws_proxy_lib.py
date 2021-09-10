@@ -52,6 +52,7 @@ class WebsocketProxy:
         if jwt_token is None:
             logging.warning("Invalid token")
             await websocket.close(reason="invalid token")
+            return
         namespace_name = jwt_token.namespace_name
 
         # build websocket url and connect to
