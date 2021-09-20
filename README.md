@@ -17,7 +17,7 @@ The library contains one module called ws_proxy_lib that contains one class. Thi
 First you need to initialize an object of the class. For that you need to pass some parameters:
 
 - `remote_url`: The base URL to the Kubernetes api (for example `"ws://localhost:8001"`)
-- `api_path`: The path in the api that points to a vmi. This needs to contain the variables `{namespace}` and `{vmi_name}` (for example `"/apis/subresources.kubevirt.io/v1alpha3/namespaces/{namespace}/virtualmachineinstances/{vmi_name}/vnc"`)
+- `api_path`: The path in the api that points to a VMI. This needs to contain the variables `{namespace}` and `{vmi_name}` (for example `"/apis/subresources.kubevirt.io/v1alpha3/namespaces/{namespace}/virtualmachineinstances/{vmi_name}/vnc"`)
 - `local_dev_mode`: This is a boolean that indicated if you are running the lib locally in a development mode or running it in a Kubernetes cluster. Running it locally disables ssl. Running it in Kubernetes will automatically include the TLS client certificate from `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt` and use the token from `/var/run/secrets/kubernetes.io/serviceaccount/token`.
 - `secret_key`: The key that is used to decrypt the token.
 

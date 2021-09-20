@@ -1,3 +1,4 @@
+"""Library that adds JWT authentication to KubeVirts VNC Websockets."""
 import ssl
 import threading
 import asyncio
@@ -8,7 +9,19 @@ from lab_orchestrator_lib_auth.auth import verify_auth_token
 
 
 class WebsocketProxy:
-    def __init__(self, remote_url, api_path, local_dev_mode, secret_key):
+    """Add JWT authentication to KubeVirts VNC Websockets.
+
+    This WebsocketProxy is made to be run inside of Kubernetes. It creates a proxy to access KubeVirts VNC Websockets and adds authentication to this.
+    """
+
+    def __init__(self, remote_url: str, api_path: str, local_dev_mode: bool, secret_key: str):
+        """Initializes a WebsocketProxy object.
+
+        :param remote_url: Base URL to the Kubernetes api.
+        :param api_path: The path in the api that points to a VMI.
+        :param local_dev_mode: Indicates if the proxy runs in development mode or in Kubernetes.
+        :param secret_key: Key that is used to decrypt the tokens.
+        """
         self.remote_url = remote_url
         self.api_path = api_path
         self.thread = None
@@ -16,11 +29,23 @@ class WebsocketProxy:
         self.secret_key = secret_key
 
     def run(self, host, port):
+        """Starts the websocket proxy server.
+
+        :param host: Host that the server should use.
+        :param port: Port that the server should use.
+        """
         start_server = websockets.serve(self.proxy, host, port)
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio.get_event_loop().run_forever()
 
     def run_in_thread(self, host, port):
+        """Starts the websocket proxy server in a thread.
+
+        To stop this thread use the method `stop_thread`.
+
+        :param host: Host that the server should use.
+        :param port: Port that the server should use.
+        """
         start_server = websockets.serve(self.proxy, host, port)
         self.loop = asyncio.get_event_loop()
         self.loop.run_until_complete(start_server)
@@ -28,6 +53,7 @@ class WebsocketProxy:
         self.thread.start()
 
     def stop_thread(self):
+        """Stops the thread where the websocket proxy server was started."""
         if self.thread is not None:
             self.loop.call_soon_threadsafe(self.loop.stop)
             logging.info("Stopped loop")
@@ -35,8 +61,7 @@ class WebsocketProxy:
             logging.info("Stopped thread")
 
     async def proxy(self, websocket, path):
-        """Called whenever a new connection is made to the server.
-        """
+        """Called whenever a new connection is made to the server."""
         # one token can include access to multiple vmi names, but is only valid for one namespace
         # split path to get vmi name and token
         splitted = path.split("/")
