@@ -1,8 +1,15 @@
 # Configuration file for the Sphinx documentation builder.
 import sys
+import re
+from os.path import abspath, dirname, join
 
 # add src to path
 sys.path.append("../src")
+
+CURDIR = dirname(abspath(__file__))
+
+with open(join(CURDIR, '..', '..', 'src', 'lab_orchestrator_ws_proxy_lib', '__init__.py'), "r", encoding="utf-8") as f:
+    VERSION = re.search('^__version__ = "(.*)"', f.read()).group(1)
 
 # -- Project information
 
@@ -10,8 +17,8 @@ project = 'WebsocketProxyLib'
 copyright = '2021, Marco Schlicht'
 author = 'Marco Schlicht'
 
-release = "0.0.2"
-version = "0.0.2"
+release = VERSION
+version = VERSION
 
 # -- General configuration
 
