@@ -18,11 +18,15 @@ Creating a Proxy
 To create a Proxy you need to create a ``lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy`` object:
 
 .. autoclass:: lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy
-    :members:
+    :members: __init__, run, run_in_thread, stop_thread
+    :undoc-members:
+    :exclude-members: clientToServer, serverToClient, proxy
 
     .. rubric:: Methods
 
+
 .. autofunction:: lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy.__init__
+    :noindex:
 
 * The `remote_url` parameter is the base URL to the Kubernetes api (for example `"ws://localhost:8001"`).
 * The `api_path` parameter is the path in the api that points to a VMI. This needs to contain the variables `{namespace}` and `{vmi_name}` (for example `"/apis/subresources.kubevirt.io/v1alpha3/namespaces/{namespace}/virtualmachineinstances/{vmi_name}/vnc"`). The variables will be replaced when a new connection is made with the correct namespace name and the VMI-name.
@@ -35,6 +39,7 @@ Run Websocket Proxy
 After creating a proxy you need to run it. For this case you have the ``lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy.run`` method:
 
 .. autofunction:: lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy.run
+    :noindex:
 
 The run method starts the websocket server in foreground and every new connection is added to an event loop.
 
@@ -44,6 +49,7 @@ Run Websocket Proxy in Thread
 Another way to start the proxy is the ``lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy.run_in_thread`` method:
 
 .. autofunction:: lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy.run_in_thread
+    :noindex:
 
 This method runs the websocket server in background.
 
@@ -53,6 +59,7 @@ Stop Websocket Proxy Thread
 To stop the thread you can use the ``lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy.stop_thread`` method:
 
 .. autofunction:: lab_orchestrator_ws_proxy_lib.ws_proxy_lib.WebsocketProxy.stop_thread
+    :noindex:
 
 Connect
 -------
