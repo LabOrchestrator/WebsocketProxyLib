@@ -1,9 +1,19 @@
-![](https://img.shields.io/librariesio/release/pypi/lab-orchestrator-ws-proxy-lib)
+[![Status](https://img.shields.io/pypi/status/lab-orchestrator-ws-proxy-lib)](https://pypi.org/project/lab-orchestrator-ws-proxy-lib/)
+[![Version](https://img.shields.io/pypi/v/lab-orchestrator-ws-proxy-lib?label=release)](https://pypi.org/project/lab-orchestrator-ws-proxy-lib/)
+[![License](https://img.shields.io/github/license/laborchestrator/WebsocketProxyLib)](https://github.com/LabOrchestrator/WebsocketProxyLib/blob/main/LICENSE)
+[![Issues](https://img.shields.io/github/issues/laborchestrator/WebsocketProxyLib)](https://github.com/laborchestrator/WebsocketProxyLib/issues)
+[![Downloads](https://img.shields.io/pypi/dw/lab-orchestrator-ws-proxy-lib)](https://pypi.org/project/lab-orchestrator-ws-proxy-lib/)
+[![Dependencies](https://img.shields.io/librariesio/release/pypi/lab-orchestrator-ws-proxy-lib)](https://libraries.io/pypi/lab-orchestrator-ws-proxy-lib)
+[![Docs](https://img.shields.io/readthedocs/websocketproxylib)](https://websocketproxylib.readthedocs.io/en/latest/)
 
 
 # Websocket Proxy Lib
 
 Library that contains a Proxy for KubeVirts VNC Websockets. It uses JWT Tokens for Authentication and to transfer data.
+
+[Github](https://github.com/LabOrchestrator/WebsocketProxyLib)  
+[PyPi](https://pypi.org/project/lab-orchestrator-ws-proxy-lib/)  
+[Read The Docs](https://websocketproxylib.readthedocs.io/en/latest/)
 
 ## Installation
 
