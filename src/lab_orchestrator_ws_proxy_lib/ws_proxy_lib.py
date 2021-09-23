@@ -2,6 +2,8 @@
 import ssl
 import threading
 import asyncio
+from typing import Optional
+
 import websockets
 import logging
 
@@ -14,19 +16,22 @@ class WebsocketProxy:
     This WebsocketProxy is made to be run inside of Kubernetes. It creates a proxy to access KubeVirts VNC Websockets and adds authentication to this.
     """
 
-    def __init__(self, remote_url: str, api_path: str, local_dev_mode: bool, secret_key: str):
+    def __init__(self, remote_url: str, api_path: str, local_dev_mode: bool, secret_key: str,
+                 host_path_prefix: Optional[str] = None):
         """Initializes a WebsocketProxy object.
 
         :param remote_url: Base URL to the Kubernetes api.
         :param api_path: The path in the api that points to a VMI.
         :param local_dev_mode: Indicates if the proxy runs in development mode or in Kubernetes.
         :param secret_key: Key that is used to decrypt the tokens.
+        :param host_path_prefix: Prefix that is removed from the path.
         """
         self.remote_url = remote_url
         self.api_path = api_path
         self.thread = None
         self.local_dev_mode = local_dev_mode
         self.secret_key = secret_key
+        self.host_path_prefix = host_path_prefix
 
     def run(self, host, port):
         """Starts the websocket proxy server.
@@ -65,12 +70,24 @@ class WebsocketProxy:
         # one token can include access to multiple vmi names, but is only valid for one namespace
         # split path to get vmi name and token
         splitted = path.split("/")
-        if len(splitted) != 3:
-            logging.warning("Invalid URL")
-            await websocket.close(reason="invalid url")
-            return
-        token = splitted[1]
-        vmi_name = splitted[2]
+        if self.host_path_prefix is None:
+            if len(splitted) != 3:
+                logging.warning("Invalid URL")
+                await websocket.close(reason="invalid url")
+                return
+            token = splitted[1]
+            vmi_name = splitted[2]
+        else:
+            if len(splitted) != 4:
+                logging.warning("Invalid URL")
+                await websocket.close(reason="invalid url")
+                return
+            if splitted[1] != self.host_path_prefix:
+                logging.warning("Wrong path prefix")
+                await websocket.close(reason="wrong path prefix")
+                return
+            token = splitted[2]
+            vmi_name = splitted[3]
 
         # check if user has permissions to access this vmi
         jwt_token = verify_auth_token(token, vmi_name, secret_key=self.secret_key)
