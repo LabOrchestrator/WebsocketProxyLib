@@ -32,6 +32,7 @@ To create a Proxy you need to create a ``lab_orchestrator_ws_proxy_lib.ws_proxy_
 * The `api_path` parameter is the path in the api that points to a VMI. This needs to contain the variables `{namespace}` and `{vmi_name}` (for example `"/apis/subresources.kubevirt.io/v1alpha3/namespaces/{namespace}/virtualmachineinstances/{vmi_name}/vnc"`). The variables will be replaced when a new connection is made with the correct namespace name and the VMI-name.
 * The `local_dev_mode` parameter is a boolean that indicated if you are running the lib locally in a development mode or running it in a Kubernetes cluster. Running it locally disables ssl. Running it in Kubernetes will automatically include the TLS client certificate from `/var/run/secrets/kubernetes.io/serviceaccount/ca.crt` and use the token from `/var/run/secrets/kubernetes.io/serviceaccount/token`.
 * The `secret_key` parameter is the key that is used to decrypt the token.
+* The `host_path_prefix` when the server is started behind a reverse proxy it is possible that the path contains a prefix. For example `/ws_proxy/token/vm`.
 
 Run Websocket Proxy
 -------------------
