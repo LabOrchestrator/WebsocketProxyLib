@@ -2,6 +2,7 @@
 import ssl
 import threading
 import asyncio
+import jwt
 from typing import Optional
 
 import websockets
@@ -90,12 +91,24 @@ class WebsocketProxy:
             vmi_name = splitted[3]
 
         # check if user has permissions to access this vmi
-        jwt_token = verify_auth_token(token, vmi_name, secret_key=self.secret_key)
-        if jwt_token is None:
-            logging.warning("Invalid token")
-            await websocket.close(reason="invalid token")
+        try:
+            valid, token_data = verify_auth_token(token, vmi_name, secret_key=self.secret_key)
+
+        except jwt.exceptions.ExpiredSignatureError:
+            logging.warning("token expired")
+            await websocket.close(reason="token expired")
             return
-        namespace_name = jwt_token.namespace_name
+
+        except jwt.exceptions.InvalidTokenError:
+            logging.warning("token invalid")
+            await websocket.close(reason="token invalid")
+            return
+
+        if not valid:
+            logging.warning("Token not allowed for this vmi")
+            await websocket.close(reason="Token not allowed for this vmi")
+            return
+        namespace_name = token_data.namespace_name
 
         # build websocket url and connect to
         url = self.remote_url + self.api_path.format(namespace=namespace_name, vmi_name=vmi_name)
